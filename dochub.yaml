@@ -1,0 +1,204 @@
+
+# Здесь можно подключить репозитории архитектуры
+imports:
+#  - https://dochub.info/documentation/root.yaml  # по прямой ссылке (попробуй раскомментировать и посмотри на результат)
+#  - back.yaml                                     # или по относительному пути
+
+# Это аспекты. Аспекты - аналитические маркеры, позволяющие выделять
+# сегменты архитектуры. Кликни на лупе слева и посмотри как они помогают
+# найти то, что нужно.
+aspects:
+  auth:                       # Идентификатор аспекта
+    title: Авторизация         # Название
+    location: Авторизация     # Размещение в меню
+  pickup:
+    title: Сборы
+    location: Сборы
+  delivery:                # Структурированные идентификаторы аспектов определяют их иерархию
+    title: Доставки
+    location: Доставки
+  lsd:
+    title: Приложение диспетчера
+    location: LSDui
+  steersman:
+    title: Приложение курьера
+    location: STEERSMANui
+# Архитектурные компоненты. Из них строится ИТ архитектура.
+components:
+
+  # Компоненты верхнего уровня (L1 C4Model)
+  worker:                       # Идентификатор компонента
+    title: Диспетчер       # Название
+    entity: actor             # Представление на схеме
+    links:                    # Компоненты, с которыми происходит взаимодействие
+      - id: system            # Идентификатор компонента
+        direction: <-->       # Направление взаимодействия (<-- | -- | --> | <-->)
+        title: Управление курьерами        # Смысл взаимодействия
+  courier:                       # Идентификатор компонента
+    title: Курьер       # Название
+    entity: actor             # Представление на схеме
+    links:                    # Компоненты, с которыми происходит взаимодействие
+      - id: system            # Идентификатор компонента
+        direction: <-->       # Направление взаимодействия (<-- | -- | --> | <-->)
+        title: Выполенние доставок/сборов       # Смысл взаимодействия
+
+  lsd_system:
+    title: Система
+    entity: collections
+    aspects:                  # Аспекты, которые реализует компонент
+      - auth
+      - pickup
+      - delivery
+  # Внутренняя архитектура компонентов верхнего уровня (L2 C4Model)
+  lsd_system.backend:
+    title: Бэкенд
+    entity: component
+    links:
+      - id: lsd_system.db
+        direction: <-->
+    aspects:
+      - pickup
+      - delivery
+    technologies:
+      - PHP
+      - Symfony
+
+  # Детальная архитектура бэкенда (L3 C4Model)
+  lsd_system.backend.core:
+    title: Ядро
+    entity: component
+  lsd_system.backend.log:
+    title: Подсистема логирования
+    entity: component
+  lsd_system.backend.business:
+    title: Бизнес-логика
+    entity: component
+
+  lsd_system.frontend:
+    title: Фронт
+    entity: component
+    links:
+      - id: lsd_system.db
+        direction: <-->
+    aspects:
+      - lsd
+      - steersman
+    technologies:
+      - React
+      - KeyDB
+
+  # Детальная архитектура фронта (L3 C4Model)
+  lsd_system.frontend.core:
+    title: Ядро
+    entity: component
+  lsd_system.frontend.log:
+    title: Подсистема логирования
+    entity: component
+  lsd_system.frontend.business:
+    title: Бизнес-логика
+    entity: component
+
+  lsd_system.auth:
+    title: Авторизация
+    entity: component
+    aspects:
+      - auth
+    links:
+      - id: lsd_system.db
+        direction: <-->
+    technologies:
+      - PHP
+      - OAuth
+
+  lsd_system.db:
+    title: Хранилище
+    entity: database
+  lsd_system.db.business:
+    title: Данные
+    entity: database
+    technologies:
+      - PostgreSQL
+  lsd_system.db.users:
+    title: Пользователи
+    entity: database
+    technologies:
+      - PostgreSQL
+
+# Диаграммы представлений
+contexts:
+  lsd_system:                     # Архитектура системы (L2 C4Model)
+    title: Устройство системы
+    location: LSD
+    components:
+      - lsd_system.*              # Можно указать wildcard включаемых компонентов в диаграмму
+  lsd_system.backend:             # Архитектура бэкенда (L3 C4Model)
+    title: Устройство бэкенда
+    location: LSD/Бэкенд
+    components:
+      - lsd_system.backend.*
+  lsd_system.frontend:             # Архитектура бэкенда (L3 C4Model)
+    title: Устройство бэкенда
+    location: LSD/Fronted
+    components:
+      - lsd_system.frontend.*
+# Документы
+docs:
+  example:
+    location: Пример документа  # Размещение в меню
+    # Ссылка может быть как на внешний ресурс, так на файл по относительному пути
+    source: docs/api/api.yaml
+    type: openapi               # Тип документа (OpenApi | Markdown | PlantUML | Table)
+
+# Описание технологического стека
+technologies:
+  sections:                           # Определение разделов стека
+    languages:                         # Идентификатор раздела
+      title: Языки программирования   # Название раздела
+    frameworks:
+      title: Фреймворки
+    databases:
+      title: Базы данных
+    storages:
+      title: Хранилища
+    protocols:
+      title: Протоколы
+  items:                              # Перечисление технологий
+    PHP:                              # Идентификатор технологии
+      aliases:                        # Синонимы технологии
+        - пыха
+      title: Супер-крутой язык программирования   # Название технологии
+      link: https://www.php.net/                  # Ссылка на документацию
+      section: languages              # Идентификатор секции технологии
+      status: adopt                   # Статус технологии adopt / trial / assess / hold
+    Go:
+      title: Go
+      link: https://go.dev/
+      section: languages
+      status: trial
+    Laravel:
+      title: Laravel
+      link: https://laravel.ru/
+      section: frameworks
+      status: trial
+    PostgreSQL:
+      title: PostgreSQL
+      link: https://www.postgresql.org/
+      section: databases
+      status: assess
+    HTTP:
+      title: HTTP
+      link: https://ru.wikipedia.org/wiki/HTTP
+      section: protocols
+      status: adopt
+    OAuth:
+      title: OAuth
+      link: https://ru.wikipedia.org/wiki/OAuth
+      section: protocols
+      status: adopt
+
+#******************************************************************************
+#                          Теперь ты почти все знаешь!
+#                    подробности на сайте https://dochub.info
+#    Если появятся вопросы, нужна будет помощь или ты захочешь сделать свой
+#           вклад в проект иди сюда - https://github.com/RabotaRu/DocHub
+#******************************************************************************

@@ -1,0 +1,5 @@
+# Подключаем слои C4 Model
+imports:
+  - c4.yaml
+  - back.yaml
+  - front.yaml

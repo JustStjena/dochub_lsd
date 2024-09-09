@@ -1,0 +1,99 @@
+c4model:
+  worker:                       # Идентификатор компонента
+    title: Диспетчер       # Название
+    entity: actor             # Представление на схеме
+    links:                    # Компоненты, с которыми происходит взаимодействие
+      - id: lsd_system            # Идентификатор компонента
+        direction: <-->       # Направление взаимодействия (<-- | -- | --> | <-->)
+        title: Управление курьерами        # Смысл взаимодействия
+  courier:                       # Идентификатор компонента
+    title: Курьер       # Название
+    entity: actor             # Представление на схеме
+    links:                    # Компоненты, с которыми происходит взаимодействие
+      - id: lsd_system            # Идентификатор компонента
+        direction: <-->       # Направление взаимодействия (<-- | -- | --> | <-->)
+        title: Выполенние доставок/сборов       # Смысл взаимодействия
+
+  lsd_system:
+    title: Система
+    entity: collections
+    aspects:                  # Аспекты, которые реализует компонент
+      - auth
+      - pickup
+      - delivery
+
+  # Внутренняя архитектура компонентов верхнего уровня (L2 C4Model)
+  lsd_system.backend:
+    title: Бэкенд
+    entity: component
+    links:
+      - id: lsd_system.db
+        direction: <-->
+    aspects:
+      - pickup
+      - delivery
+    technologies:
+      - PHP
+      - Symfony
+
+  # Детальная архитектура бэкенда (L3 C4Model)
+  lsd_system.backend.core:
+    title: Ядро
+    entity: component
+  lsd_system.backend.log:
+    title: Подсистема логирования
+    entity: component
+  lsd_system.backend.business:
+    title: Бизнес-логика
+    entity: component
+
+  lsd_system.frontend:
+    title: Фронт
+    entity: component
+    links:
+      - id: lsd_system.db
+        direction: <-->
+    aspects:
+      - lsd
+      - steersman
+    technologies:
+      - React
+      - KeyDB
+
+  # Детальная архитектура фронта (L3 C4Model)
+  lsd_system.frontend.core:
+    title: Ядро
+    entity: component
+  lsd_system.frontend.log:
+    title: Подсистема логирования
+    entity: component
+  lsd_system.frontend.business:
+    title: Бизнес-логика
+    entity: component
+
+  lsd_system.auth:
+    title: Авторизация
+    entity: component
+    aspects:
+      - auth
+    links:
+      - id: lsd_system.db
+        direction: <-->
+    technologies:
+      - PHP
+      - OAuth
+
+  lsd_system.db:
+    title: Хранилище
+    entity: database
+  lsd_system.db.business:
+    title: Данные
+    entity: database
+    technologies:
+      - PostgreSQL
+  lsd_system.db.users:
+    title: Пользователи
+    entity: database
+    technologies:
+      - PostgreSQL
+
