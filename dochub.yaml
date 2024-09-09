@@ -3,6 +3,7 @@
 imports:
  - back.yaml                                     # или по относительному пути
  - front.yaml
+ - an_system.yaml
 # Это аспекты. Аспекты - аналитические маркеры, позволяющие выделять
 # сегменты архитектуры. Кликни на лупе слева и посмотри как они помогают
 # найти то, что нужно.
@@ -25,19 +26,6 @@ components:
       - id: system            # Идентификатор компонента
         direction: <-->       # Направление взаимодействия (<-- | -- | --> | <-->)
         title: Выполенние доставок/сборов       # Смысл взаимодействия
-  an_system:
-    title: Сервисы агентской сети
-    entity: collections
-
-  an_system.fps:
-    title: FPS
-    entity: component
-  an_system.bless:
-    title: BLESS
-    entity: component
-  an_system.adapter:
-    title: Adapter
-    entity: component
 
   lsd_system:
     title: LSD

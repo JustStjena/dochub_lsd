@@ -1,0 +1,25 @@
+components:
+
+  an_system:
+    title: Сервисы агентской сети
+    entity: collections
+
+  an_system.fps:
+    title: FPS
+    entity: component
+  an_system.bless:
+    title: BLESS
+    entity: component
+  an_system.adapter:
+    title: Adapter
+    entity: component
+
+
+# Диаграммы представлений
+contexts:
+  an_system:                     # Архитектура системы (L2 C4Model)
+    title: Внешние интеграции
+    location: LSD/Integration
+    components:
+      - an_system.*
+      - lsd_system
