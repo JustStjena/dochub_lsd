@@ -88,10 +88,15 @@ contexts:
 # Документы
 docs:
   example:
-    location: Пример документа  # Размещение в меню
+    location: REST API  # Размещение в меню
     # Ссылка может быть как на внешний ресурс, так на файл по относительному пути
     source: docs/api/api.yaml
     type: openapi               # Тип документа (OpenApi | Markdown | PlantUML | Table)
+  uml:
+    location: Каскад статусов # Размещение в меню
+    # Ссылка может быть как на внешний ресурс, так на файл по относительному пути
+    source: ex.uml
+    type: plantuml               # Тип документа (OpenApi | Markdown | PlantUML | Table)
 
 # Описание технологического стека
 technologies:
