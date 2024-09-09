@@ -1,0 +1,34 @@
+@startuml
+User -> Requirement: Принять сбор
+Requirement --> Requirement: Изменить статус на done
+
+
+
+
+
+alt#White #LightBlue Успешный кейс
+    Requirement --> Task:  Обновить статус задания
+    Task --> RouteList: Обновить статус МЛ
+    RouteList --> Courier: Обновить статус курьера
+
+else #Pink Некритичная ошибка(несинхронный перевод статусов)
+    Task -[#red]-> Requirement:  Ошибочная комбинация статусов потребностей
+
+end
+
+   alt#Pink Критичная ошибка(переход статусов недопустимпо статусной модели)
+    Requirement --> Task:  Обновить статус задания
+    Task -[#red]-> Requirement: Новый статус недопустим по статусной модели
+    Requirement --> Requirement : rollback
+    Requirement --> User: 422
+
+
+    
+end
+
+RouteList -[#red]-> Task: Новый статус недопустим по статусной модели
+RouteList -[#red]-> Task: Ошибочная комбинация статусов заданий
+    Task --> RouteList: Обновить статус МЛ
+    RouteList --> Courier: Обновить статус курьера
+
+@enduml

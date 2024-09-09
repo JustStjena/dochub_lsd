@@ -1,5 +1,0 @@
-# Подключаем слои C4 Model
-imports:
-  - L1.yaml
-  - L2.yaml
-  - L3.yaml

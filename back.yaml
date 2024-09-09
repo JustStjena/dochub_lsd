@@ -1,0 +1,53 @@
+imports:
+#  - https://dochub.info/documentation/root.yaml  # по прямой ссылке (попробуй раскомментировать и посмотри на результат)
+#  - foo.yaml                                     # или по относительному пути
+
+# Это аспекты. Аспекты - аналитические маркеры, позволяющие выделять
+# сегменты архитектуры. Кликни на лупе слева и посмотри как они помогают
+# найти то, что нужно.
+aspects:
+  auth:                       # Идентификатор аспекта
+    title: Авторизация         # Название
+    location: Авторизация     # Размещение в меню
+  pickup:
+    title: Сборы
+    location: Сборы
+  delivery:                # Структурированные идентификаторы аспектов определяют их иерархию
+    title: Доставки
+    location: Доставки
+
+# Архитектурные компоненты. Из них строится ИТ архитектура.
+components:
+
+  # Внутренняя архитектура компонентов верхнего уровня (L2 C4Model)
+  lsd_system.backend:
+    title: Бэкенд
+    entity: component
+    links:
+      - id: lsd_system.db
+        direction: <-->
+    aspects:
+      - pickup
+      - delivery
+    technologies:
+      - PHP
+      - Symfony
+
+  # Детальная архитектура бэкенда (L3 C4Model)
+  lsd_system.backend.core:
+    title: Ядро
+    entity: component
+  lsd_system.backend.log:
+    title: Подсистема логирования
+    entity: component
+  lsd_system.backend.business:
+    title: Бизнес-логика
+    entity: component
+
+# Диаграммы представлений
+contexts:
+  lsd_system.backend:             # Архитектура бэкенда (L3 C4Model)
+    title: Устройство бэкенда
+    location: LSD/Бэкенд
+    components:
+      - lsd_system.backend.*

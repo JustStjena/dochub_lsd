@@ -1,48 +1,146 @@
-# Метаданные пакета
-$package:
-  dochub-examples: # Идентификатор пакета
-    # Краткое название пакета
-    name: Примеры использования DocHub
-    # Поставщик
-    vendor: Сообщество DocHub
-    # Описание
-    description: >
-      Репозиторий содержит примеры использования инструмента управления архитектурой DocHub.
-      Репозиторий развивается силами сообщества.
-    # Версия
-    version: 1.2.0
-    # Зависимости от других пакетов
-    dependencies:
-      dochub: ">=3.8.0"
-      
+
+# Здесь можно подключить репозитории архитектуры
 imports:
-# 1. Пример создания метамодели для описания в нотации C4 Model
-  - src/C4Model/dochub.yaml
-# 2. Валидации сущностей в DocHub с выводом информации в меню
-#  - src/validator_example/dochub.yaml
-# 3. Управление бизнес-сущностями
-#  - src/business_entity_management/dochub.yaml
-# 4. Пример сущности для бизнес-процессов
-#  - src/sequences_entity_example/dochub.yaml
-# 5. Динамические контексты
-#  - src/DynamicContext/dochub.yaml
-# 6. Пример встраивание виджетов в представления Components и Aspects
-#  - src/widgets/dochub.yaml
-# 7. Пример управления процессом развертывания систем в кластерах
-#  - src/deployment_units_management/dochub.yaml
-# 8. Примеры запросов JSONata
-#  - src/jsonata_query_examples/dochub.yaml
-# 9. Пример структуры репозитория для управления архитектурой
-#  - src/repository_structure_example/dochub.yaml
-# 10. Пример формирования L1 контекста
-#  - src/l1_drilldown/dochub.yaml
-# 11. Примеры для кликабельных линков и пользовательского DSL
-#  - src/customdsl/dochub.yaml
-# 13. Модификация метамодели для описания связей в собственном формате
-#  - src/new_links_format/dochub.yaml
-# 14. Entity Relationship диаграммы и диаграммы классов
-#  - src/DynamicEntityRelationshipDiagrams/dochub.yaml
-# 15. Динамическое изменение группировки компонент в представлении контекста
-#  - src/DynamicChangeOfContextGrouping/dochub.yaml
-# 16. Пример создания чата с корпоративным ИИ на основе репозитория DocHub
-#  - src/aichatbot/dochub.yaml
+ - back.yaml                                     # или по относительному пути
+ - front.yaml
+ - an_system.yaml
+# Это аспекты. Аспекты - аналитические маркеры, позволяющие выделять
+# сегменты архитектуры. Кликни на лупе слева и посмотри как они помогают
+# найти то, что нужно.
+
+# Архитектурные компоненты. Из них строится ИТ архитектура.
+components:
+
+  # Компоненты верхнего уровня (L1 C4Model)
+  worker:                       # Идентификатор компонента
+    title: Диспетчер       # Название
+    entity: actor             # Представление на схеме
+    links:                    # Компоненты, с которыми происходит взаимодействие
+      - id: system            # Идентификатор компонента
+        direction: <-->       # Направление взаимодействия (<-- | -- | --> | <-->)
+        title: Управление курьерами        # Смысл взаимодействия
+  courier:                       # Идентификатор компонента
+    title: Курьер       # Название
+    entity: actor             # Представление на схеме
+    links:                    # Компоненты, с которыми происходит взаимодействие
+      - id: system            # Идентификатор компонента
+        direction: <-->       # Направление взаимодействия (<-- | -- | --> | <-->)
+        title: Выполенние доставок/сборов       # Смысл взаимодействия
+
+  lsd_system:
+    title: LSD
+    entity: collections
+    links:
+      - id: an_system.adapter
+        direction: <-->
+        title: Получение заданий \nОтчет о результатах
+      - id: an_system.fps
+        direction: <-->
+        title: Формирование \nдокументов
+      - id: an_system.bless
+        direction: <-->
+        title: Запись лога \nи получение истории \nлог сущностей
+    aspects:                  # Аспекты, которые реализует компонент
+      - auth
+      - pickup
+      - delivery
+
+  lsd_system.auth:
+    title: Авторизация
+    entity: component
+    aspects:
+      - auth
+    links:
+      - id: lsd_system.db
+        direction: <-->
+    technologies:
+      - PHP
+      - OAuth
+
+  lsd_system.db:
+    title: Хранилище
+    entity: database
+  lsd_system.db.business:
+    title: Данные
+    entity: database
+    technologies:
+      - PostgreSQL
+  lsd_system.db.users:
+    title: Пользователи
+    entity: database
+    technologies:
+      - PostgreSQL
+
+# Диаграммы представлений
+contexts:
+  an_system:                     # Архитектура системы (L2 C4Model)
+    title: Внешние интеграции
+    location: LSD/Integration
+    components:
+      - an_system.*
+      - lsd_system
+  lsd_system:                     # Архитектура системы (L2 C4Model)
+    title: Устройство системы
+    location: LSD/System
+    components:
+      - lsd_system.*              # Можно указать wildcard включаемых компонентов в диаграмму
+
+# Документы
+docs:
+  example:
+    location: REST API  # Размещение в меню
+    # Ссылка может быть как на внешний ресурс, так на файл по относительному пути
+    source: docs/api/api.yaml
+    type: openapi               # Тип документа (OpenApi | Markdown | PlantUML | Table)
+  uml:
+    location: Каскад статусов # Размещение в меню
+    # Ссылка может быть как на внешний ресурс, так на файл по относительному пути
+    source: ex.uml
+    type: plantuml               # Тип документа (OpenApi | Markdown | PlantUML | Table)
+
+# Описание технологического стека
+technologies:
+  sections:                           # Определение разделов стека
+    languages:                         # Идентификатор раздела
+      title: Языки программирования   # Название раздела
+    frameworks:
+      title: Фреймворки
+    databases:
+      title: Базы данных
+    storages:
+      title: Хранилища
+    protocols:
+      title: Протоколы
+  items:                              # Перечисление технологий
+    PHP:                              # Идентификатор технологии
+      aliases:                        # Синонимы технологии
+        - пыха
+      title: Супер-крутой язык программирования   # Название технологии
+      link: https://www.php.net/                  # Ссылка на документацию
+      section: languages              # Идентификатор секции технологии
+      status: adopt                   # Статус технологии adopt / trial / assess / hold
+    Go:
+      title: Go
+      link: https://go.dev/
+      section: languages
+      status: trial
+    Laravel:
+      title: Laravel
+      link: https://laravel.ru/
+      section: frameworks
+      status: trial
+    PostgreSQL:
+      title: PostgreSQL
+      link: https://www.postgresql.org/
+      section: databases
+      status: assess
+    HTTP:
+      title: HTTP
+      link: https://ru.wikipedia.org/wiki/HTTP
+      section: protocols
+      status: adopt
+    OAuth:
+      title: OAuth
+      link: https://ru.wikipedia.org/wiki/OAuth
+      section: protocols
+      status: adopt

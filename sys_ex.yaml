@@ -1,0 +1,28 @@
+imports:
+#  - https://dochub.info/documentation/root.yaml  # по прямой ссылке (попробуй раскомментировать и посмотри на результат)
+#  - foo.yaml                                     # или по относительному пути
+
+components:
+
+  # Компоненты верхнего уровня (L1 C4Model)
+  system:
+    title: Система
+    entity: collections
+
+  system.db:
+    title: БД
+    entity: component
+
+  system.backend:
+    title: Бэкенд
+    entity: component
+    links:
+      - id: system.db
+        direction: <-->
+
+contexts:
+  lsd_system:                     # Архитектура системы (L2 C4Model)
+    title: ТестУстройство системы
+    location: LSD
+    components:
+      - system.*              # Можно указать wildcard включаемых компонентов в диаграмму

@@ -1,0 +1,49 @@
+imports:
+#  - https://dochub.info/documentation/root.yaml  # по прямой ссылке (попробуй раскомментировать и посмотри на результат)
+#  - foo.yaml                                     # или по относительному пути
+
+# Это аспекты. Аспекты - аналитические маркеры, позволяющие выделять
+# сегменты архитектуры. Кликни на лупе слева и посмотри как они помогают
+# найти то, что нужно.
+aspects:
+  lsd:
+    title: Приложение диспетчера
+    location: LSDui
+  steersman:
+    title: Приложение курьера
+    location: STEERSMANui
+
+# Архитектурные компоненты. Из них строится ИТ архитектура.
+components:
+
+
+  lsd_system.frontend:
+    title: Фронт
+    entity: component
+    links:
+      - id: lsd_system.db
+        direction: <-->
+    aspects:
+      - lsd
+      - steersman
+    technologies:
+      - React
+      - KeyDB
+
+  # Детальная архитектура фронта (L3 C4Model)
+  lsd_system.frontend.core:
+    title: Ядро
+    entity: component
+  lsd_system.frontend.log:
+    title: Подсистема логирования
+    entity: component
+  lsd_system.frontend.db:
+    title: Кэш
+    entity: component
+# Диаграммы представлений
+contexts:
+  lsd_system.frontend:             # Архитектура бэкенда (L3 C4Model)
+    title: Устройство бэкенда
+    location: LSD/Fronted
+    components:
+      - lsd_system.frontend.*

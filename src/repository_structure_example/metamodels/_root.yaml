@@ -1,6 +1,0 @@
-imports:
-  - custom/_root.yaml
-  # - dochub/_root.yaml  
-  - datasets/_root.yaml  
-  - jsonata/_root.yaml
-  
